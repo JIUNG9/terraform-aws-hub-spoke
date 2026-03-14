@@ -298,3 +298,61 @@ resource "aws_iam_role_policy" "flow_logs" {
     ]
   })
 }
+
+# ------------------------------------------------------------------------------
+# VPC Gateway Endpoints (S3, DynamoDB — free, no security group needed)
+# ------------------------------------------------------------------------------
+
+resource "aws_vpc_endpoint" "gateway" {
+  for_each = var.enable_vpc_endpoints ? toset(var.gateway_endpoint_services) : toset([])
+
+  vpc_id            = aws_vpc.this.id
+  service_name      = "com.amazonaws.${var.region}.${each.value}"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = compact([
+    try(aws_route_table.private[0].id, ""),
+    try(aws_route_table.database[0].id, ""),
+  ])
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-vpce-${each.value}"
+  })
+}
+
+# ------------------------------------------------------------------------------
+# VPC Interface Endpoints (SSM, etc. — ~$7.30/mo each)
+# ------------------------------------------------------------------------------
+
+resource "aws_security_group" "vpc_endpoints" {
+  count = var.enable_interface_endpoints ? 1 : 0
+
+  name_prefix = "${local.name_prefix}-vpce-"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-vpce-sg"
+  })
+}
+
+resource "aws_vpc_endpoint" "interface" {
+  for_each = var.enable_interface_endpoints ? toset(var.interface_endpoint_services) : toset([])
+
+  vpc_id              = aws_vpc.this.id
+  service_name        = "com.amazonaws.${var.region}.${each.value}"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-vpce-${each.value}"
+  })
+}
