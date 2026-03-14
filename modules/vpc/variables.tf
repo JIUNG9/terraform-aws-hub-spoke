@@ -118,6 +118,34 @@ variable "flow_logs_retention_days" {
 }
 
 # ------------------------------------------------------------------------------
+# VPC Endpoints
+# ------------------------------------------------------------------------------
+
+variable "enable_vpc_endpoints" {
+  description = "Enable Gateway VPC endpoints (S3, DynamoDB). Free."
+  type        = bool
+  default     = false
+}
+
+variable "gateway_endpoint_services" {
+  description = "List of Gateway endpoint services"
+  type        = list(string)
+  default     = ["s3", "dynamodb"]
+}
+
+variable "enable_interface_endpoints" {
+  description = "Enable Interface VPC endpoints. Each costs ~$7.30/mo."
+  type        = bool
+  default     = false
+}
+
+variable "interface_endpoint_services" {
+  description = "List of Interface endpoint services"
+  type        = list(string)
+  default     = ["ssm", "ssmmessages", "ec2messages"]
+}
+
+# ------------------------------------------------------------------------------
 # Tags
 # ------------------------------------------------------------------------------
 
