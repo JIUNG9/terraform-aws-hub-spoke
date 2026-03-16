@@ -43,6 +43,10 @@ module "vpc" {
 | `map_public_ip_on_launch` | Auto-assign public IPs in public subnets | `bool` | `false` | no |
 | `create_igw` | Create an Internet Gateway | `bool` | `true` | no |
 | `enable_nat_gateway` | Create a NAT Gateway | `bool` | `true` | no |
+| `enable_vpc_endpoints` | Enable Gateway VPC endpoints (S3, DynamoDB) | `bool` | `false` | no |
+| `gateway_endpoint_services` | List of Gateway endpoint services | `list(string)` | `["s3", "dynamodb"]` | no |
+| `enable_interface_endpoints` | Enable Interface VPC endpoints | `bool` | `false` | no |
+| `interface_endpoint_services` | List of Interface endpoint services | `list(string)` | `["ssm", "ssmmessages", "ec2messages"]` | no |
 | `enable_flow_logs` | Enable VPC Flow Logs | `bool` | `false` | no |
 | `flow_logs_retention_days` | Flow Logs retention in days | `number` | `30` | no |
 | `tags` | Additional tags for all resources | `map(string)` | `{}` | no |
@@ -67,7 +71,39 @@ module "vpc" {
 | `internet_gateway_id` | ID of the Internet Gateway |
 | `nat_gateway_id` | ID of the NAT Gateway |
 | `nat_gateway_public_ip` | Public IP of the NAT Gateway |
+| `gateway_endpoint_ids` | Map of Gateway VPC endpoint IDs |
+| `interface_endpoint_ids` | Map of Interface VPC endpoint IDs |
 | `name_prefix` | Computed name prefix for all resources |
+
+## VPC Endpoints
+
+The module supports two types of VPC endpoints:
+
+**Gateway Endpoints** (free, enabled via `enable_vpc_endpoints`):
+- S3 and DynamoDB by default
+- Route-based, attached to private and database route tables
+- No additional cost, no security group required
+
+**Interface Endpoints** (~$7.30/mo each, enabled via `enable_interface_endpoints`):
+- SSM, SSM Messages, and EC2 Messages by default (for Session Manager access)
+- ENI-based, deployed into private subnets
+- Dedicated security group allowing HTTPS (443) from VPC CIDR
+- Customize the service list via `interface_endpoint_services`
+
+```hcl
+module "vpc" {
+  source = "github.com/junegu/terraform-aws-hub-spoke//modules/vpc"
+
+  # ... other variables ...
+
+  # Free — always enable in production
+  enable_vpc_endpoints = true
+
+  # ~$7.30/mo each — enable if you need SSM Session Manager
+  enable_interface_endpoints  = true
+  interface_endpoint_services = ["ssm", "ssmmessages", "ec2messages"]
+}
+```
 
 ## Architecture
 
