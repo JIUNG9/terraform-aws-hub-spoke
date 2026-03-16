@@ -95,6 +95,20 @@ output "nat_gateway_public_ip" {
 }
 
 # ------------------------------------------------------------------------------
+# VPC Endpoint Outputs
+# ------------------------------------------------------------------------------
+
+output "gateway_endpoint_ids" {
+  description = "Map of Gateway VPC endpoint IDs"
+  value       = { for k, v in aws_vpc_endpoint.gateway : k => v.id }
+}
+
+output "interface_endpoint_ids" {
+  description = "Map of Interface VPC endpoint IDs"
+  value       = { for k, v in aws_vpc_endpoint.interface : k => v.id }
+}
+
+# ------------------------------------------------------------------------------
 # Naming
 # ------------------------------------------------------------------------------
 
