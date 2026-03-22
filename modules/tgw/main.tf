@@ -96,3 +96,27 @@ resource "aws_ram_principal_association" "this" {
   principal          = var.ram_principal_arns[count.index]
   resource_share_arn = aws_ram_resource_share.this[0].arn
 }
+
+# ------------------------------------------------------------------------------
+# Static Routes
+# ------------------------------------------------------------------------------
+
+resource "aws_ec2_transit_gateway_route" "static" {
+  for_each = { for r in var.static_routes : "${r.route_table_key}-${r.destination_cidr}" => r }
+
+  destination_cidr_block         = each.value.destination_cidr
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.this[each.value.route_table_key].id
+  transit_gateway_attachment_id  = each.value.attachment_id
+}
+
+# ------------------------------------------------------------------------------
+# Blackhole Routes (explicitly block traffic between environments)
+# ------------------------------------------------------------------------------
+
+resource "aws_ec2_transit_gateway_route" "blackhole" {
+  for_each = { for r in var.blackhole_routes : "${r.route_table_key}-${r.destination_cidr}" => r }
+
+  destination_cidr_block         = each.value.destination_cidr
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.this[each.value.route_table_key].id
+  blackhole                      = true
+}
