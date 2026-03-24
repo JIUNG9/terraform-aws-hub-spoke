@@ -47,6 +47,12 @@ variable "vpc_cidr" {
   }
 }
 
+variable "enforce_cidr_convention" {
+  description = "Enforce CIDR range by environment (prod: 10.0-49.x, stage: 10.50-99.x, dev: 10.100-149.x)"
+  type        = bool
+  default     = false
+}
+
 variable "availability_zones" {
   description = "List of availability zones for subnet placement (must provide at least 2)"
   type        = list(string)

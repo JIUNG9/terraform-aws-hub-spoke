@@ -61,6 +61,29 @@ variable "environment_route_tables" {
 }
 
 # ------------------------------------------------------------------------------
+# Static & Blackhole Routes
+# ------------------------------------------------------------------------------
+
+variable "static_routes" {
+  description = "Static routes to add to TGW route tables"
+  type = list(object({
+    destination_cidr = string
+    route_table_key  = string
+    attachment_id    = string
+  }))
+  default = []
+}
+
+variable "blackhole_routes" {
+  description = "Blackhole routes to explicitly block traffic between environments"
+  type = list(object({
+    destination_cidr = string
+    route_table_key  = string
+  }))
+  default = []
+}
+
+# ------------------------------------------------------------------------------
 # RAM Sharing (cross-account)
 # ------------------------------------------------------------------------------
 
