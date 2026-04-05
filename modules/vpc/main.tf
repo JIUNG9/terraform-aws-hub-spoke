@@ -356,3 +356,39 @@ resource "aws_vpc_endpoint" "interface" {
     Name = "${local.name_prefix}-vpce-${each.value}"
   })
 }
+
+# ------------------------------------------------------------------------------
+# Default Security Group Lockdown (Checkov CKV2_AWS_12)
+# ------------------------------------------------------------------------------
+
+resource "aws_default_security_group" "default" {
+  count  = var.restrict_default_security_group ? 1 : 0
+  vpc_id = aws_vpc.this.id
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-default-sg-restricted"
+  })
+}
+
+# ------------------------------------------------------------------------------
+# SSM Parameter Store Metadata Sync
+# ------------------------------------------------------------------------------
+
+resource "aws_ssm_parameter" "vpc_metadata" {
+  count = var.enable_ssm_metadata ? 1 : 0
+
+  name  = "/infra/${var.organization}/${var.environment}/vpc/metadata"
+  type  = "String"
+  value = jsonencode({
+    vpc_id              = aws_vpc.this.id
+    vpc_cidr            = var.vpc_cidr
+    private_subnet_ids  = aws_subnet.private[*].id
+    database_subnet_ids = aws_subnet.database[*].id
+    nat_gateway_ip      = try(aws_eip.nat[0].public_ip, null)
+    name_prefix         = local.name_prefix
+  })
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-vpc-metadata"
+  })
+}
