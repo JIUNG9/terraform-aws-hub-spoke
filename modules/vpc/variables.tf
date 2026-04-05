@@ -152,6 +152,22 @@ variable "interface_endpoint_services" {
 }
 
 # ------------------------------------------------------------------------------
+# Security Hardening
+# ------------------------------------------------------------------------------
+
+variable "restrict_default_security_group" {
+  description = "Restrict the default security group to have no rules (Checkov CKV2_AWS_12)"
+  type        = bool
+  default     = true
+}
+
+variable "enable_ssm_metadata" {
+  description = "Export VPC metadata to SSM Parameter Store for cross-stack reference"
+  type        = bool
+  default     = false
+}
+
+# ------------------------------------------------------------------------------
 # Tags
 # ------------------------------------------------------------------------------
 
