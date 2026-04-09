@@ -1,5 +1,8 @@
 # terraform-aws-hub-spoke
 
+[![CI](https://github.com/JIUNG9/terraform-aws-hub-spoke/actions/workflows/ci.yml/badge.svg)](https://github.com/JIUNG9/terraform-aws-hub-spoke/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 Production-ready Terraform modules for AWS multi-account hub-spoke network architecture using Transit Gateway.
 
 Built from real-world experience managing a 5-account AWS environment at a Korean F&B tech company, serving production microservices across isolated environments.
@@ -244,3 +247,8 @@ MIT License. See [LICENSE](./LICENSE) for details.
 - Medium: [medium.com](https://medium.com)
 
 Site Reliability Engineer with 5+ years of experience building cloud infrastructure at scale. Previously at a large e-commerce company and currently at a large tech company. This project is based on production patterns used to manage multi-account AWS environments serving microservices in Korea's F&B tech sector.
+
+## Related Articles
+
+- [Designing a Hub-Spoke AWS Multi-Account Architecture with Transit Gateway](https://medium.com) — Design decisions and CIDR allocation strategy behind these modules
+- [Terraform Module Design: Zero-Magic Principles for Multi-Account AWS](https://medium.com) — The three-layer architecture and naming conventions
