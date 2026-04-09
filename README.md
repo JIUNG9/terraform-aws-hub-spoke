@@ -1,5 +1,8 @@
 # terraform-aws-hub-spoke
 
+[![CI](https://github.com/JIUNG9/terraform-aws-hub-spoke/actions/workflows/ci.yml/badge.svg)](https://github.com/JIUNG9/terraform-aws-hub-spoke/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 Production-ready Terraform modules for AWS multi-account hub-spoke network architecture using Transit Gateway.
 
 Built from real-world experience managing a 5-account AWS environment at a Korean F&B tech company, serving production microservices across isolated environments.
@@ -64,7 +67,7 @@ Set up a 3-account hub-spoke architecture (hub + production + staging):
 ```hcl
 # Hub account -- Transit Gateway
 module "tgw" {
-  source = "github.com/junegu/terraform-aws-hub-spoke//modules/tgw"
+  source = "github.com/JIUNG9/terraform-aws-hub-spoke//modules/tgw"
 
   organization = "myorg"
   project      = "platform"
@@ -81,7 +84,7 @@ module "tgw" {
 
 # Hub account -- Shared services VPC
 module "hub_vpc" {
-  source = "github.com/junegu/terraform-aws-hub-spoke//modules/vpc"
+  source = "github.com/JIUNG9/terraform-aws-hub-spoke//modules/vpc"
 
   organization = "myorg"
   project      = "platform"
@@ -102,7 +105,7 @@ module "hub_vpc" {
 
 # Hub account -- Attach hub VPC to TGW
 module "hub_attachment" {
-  source = "github.com/junegu/terraform-aws-hub-spoke//modules/tgw-attachment"
+  source = "github.com/JIUNG9/terraform-aws-hub-spoke//modules/tgw-attachment"
 
   organization = "myorg"
   project      = "platform"
@@ -124,7 +127,7 @@ module "hub_attachment" {
 
 # Production spoke account -- VPC
 module "prod_vpc" {
-  source = "github.com/junegu/terraform-aws-hub-spoke//modules/vpc"
+  source = "github.com/JIUNG9/terraform-aws-hub-spoke//modules/vpc"
 
   providers = {
     aws = aws.prod
@@ -149,7 +152,7 @@ module "prod_vpc" {
 
 # Staging spoke account -- VPC
 module "stage_vpc" {
-  source = "github.com/junegu/terraform-aws-hub-spoke//modules/vpc"
+  source = "github.com/JIUNG9/terraform-aws-hub-spoke//modules/vpc"
 
   providers = {
     aws = aws.stage
@@ -245,3 +248,8 @@ MIT License. See [LICENSE](./LICENSE) for details.
 - Medium: [medium.com/@junegu](https://medium.com/@junegu)
 
 Site Reliability Engineer with 5+ years of experience building cloud infrastructure at scale. Previously at Coupang (NYSE: CPNG) and currently at NAVER Corporation. This project is based on production patterns used to manage multi-account AWS environments serving microservices in Korea's F&B tech sector.
+
+## Related Articles
+
+- [Designing a Hub-Spoke AWS Multi-Account Architecture with Transit Gateway](https://medium.com/@junegu) — Design decisions and CIDR allocation strategy behind these modules
+- [Terraform Module Design: Zero-Magic Principles for Multi-Account AWS](https://medium.com/@junegu) — The three-layer architecture and naming conventions
