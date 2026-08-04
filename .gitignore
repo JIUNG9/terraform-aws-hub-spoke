@@ -1,0 +1,30 @@
+# Terraform working directories — provider binaries here are hundreds of MB and
+# will be rejected by GitHub's 100 MB file limit if they ever get staged.
+**/.terraform/*
+.terraform.lock.hcl
+
+# State — never commit this. It contains resource IDs and can contain secrets.
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Variable files that typically hold account-specific or sensitive values.
+*.tfvars
+*.tfvars.json
+!example.tfvars
+!examples/**/*.tfvars
+
+# Plan output
+*.tfplan
+*.tfplan.*
+
+# CLI config
+.terraformrc
+terraform.rc
+
+# Editor / OS noise
+.DS_Store
+.idea/
+.vscode/
+*.swp
