@@ -377,8 +377,8 @@ resource "aws_default_security_group" "default" {
 resource "aws_ssm_parameter" "vpc_metadata" {
   count = var.enable_ssm_metadata ? 1 : 0
 
-  name  = "/infra/${var.organization}/${var.environment}/vpc/metadata"
-  type  = "String"
+  name = "/infra/${var.organization}/${var.environment}/vpc/metadata"
+  type = "String"
   value = jsonencode({
     vpc_id              = aws_vpc.this.id
     vpc_cidr            = var.vpc_cidr
