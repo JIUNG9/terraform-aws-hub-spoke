@@ -48,9 +48,21 @@ variable "vpc_cidr" {
 }
 
 variable "enforce_cidr_convention" {
-  description = "Enforce CIDR range by environment (prod: 10.0-49.x, stage: 10.50-99.x, dev: 10.100-149.x)"
+  description = "Enforce CIDR range by environment (prod: 10.0-49.x, stage: 10.50-99.x, dev: 10.100-149.x). Off by default so the module drops into an existing estate; turn it on for greenfield builds where you want the address plan policed."
   type        = bool
   default     = false
+
+  validation {
+    # Second octet carves the estate into per-environment bands, so a glance at any
+    # CIDR tells you which environment it belongs to. hub/shared are unconstrained —
+    # they sit outside the environment bands by design.
+    condition = !var.enforce_cidr_convention || contains(["hub", "shared"], var.environment) || (
+      var.environment == "prod" ? tonumber(split(".", var.vpc_cidr)[1]) <= 49 :
+      var.environment == "stage" ? tonumber(split(".", var.vpc_cidr)[1]) >= 50 && tonumber(split(".", var.vpc_cidr)[1]) <= 99 :
+      tonumber(split(".", var.vpc_cidr)[1]) >= 100 && tonumber(split(".", var.vpc_cidr)[1]) <= 149
+    )
+    error_message = "vpc_cidr violates the CIDR convention for this environment. Expected second octet — prod: 0-49, stage: 50-99, dev: 100-149. Set enforce_cidr_convention = false to opt out."
+  }
 }
 
 variable "availability_zones" {
