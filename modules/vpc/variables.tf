@@ -47,6 +47,10 @@ variable "vpc_cidr" {
   }
 }
 
+# terraform_unused_declarations doesn't count a variable referenced only from its
+# own validation block, which is exactly how this one is consumed. It IS used —
+# see the condition below.
+# tflint-ignore: terraform_unused_declarations
 variable "enforce_cidr_convention" {
   description = "Enforce CIDR range by environment (prod: 10.0-49.x, stage: 10.50-99.x, dev: 10.100-149.x). Off by default so the module drops into an existing estate; turn it on for greenfield builds where you want the address plan policed."
   type        = bool
