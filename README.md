@@ -245,11 +245,11 @@ MIT License. See [LICENSE](./LICENSE) for details.
 
 **June Gu**
 - LinkedIn: [linkedin.com/in/junegu](https://linkedin.com/in/junegu)
-- Medium: [medium.com/@junegu](https://medium.com/@junegu)
+- Medium: [medium.com/@June-Gu](https://medium.com/@June-Gu)
 
 Site Reliability Engineer with 5+ years of experience building cloud infrastructure at scale. Previously at Coupang (NYSE: CPNG) and currently at NAVER Corporation. This project is based on production patterns used to manage multi-account AWS environments serving microservices in Korea's F&B tech sector.
 
 ## Related Articles
 
-- [Designing a Hub-Spoke AWS Multi-Account Architecture with Transit Gateway](https://medium.com/@junegu) — Design decisions and CIDR allocation strategy behind these modules
-- [Terraform Module Design: Zero-Magic Principles for Multi-Account AWS](https://medium.com/@junegu) — The three-layer architecture and naming conventions
+- [Designing a Hub-Spoke AWS Multi-Account Architecture with Transit Gateway](https://medium.com/@June-Gu) — Design decisions and CIDR allocation strategy behind these modules
+- [Terraform Module Design: Zero-Magic Principles for Multi-Account AWS](https://medium.com/@June-Gu) — The three-layer architecture and naming conventions

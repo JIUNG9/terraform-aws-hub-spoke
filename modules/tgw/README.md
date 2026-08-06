@@ -6,7 +6,7 @@ Creates an AWS Transit Gateway with environment-isolated route tables for hub-sp
 
 ```hcl
 module "tgw" {
-  source = "github.com/junegu/terraform-aws-hub-spoke//modules/tgw"
+  source = "github.com/JIUNG9/terraform-aws-hub-spoke//modules/tgw"
 
   organization = "myorg"
   project      = "platform"

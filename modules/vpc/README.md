@@ -6,7 +6,7 @@ Creates an AWS VPC with public, private, and database subnets across 2 availabil
 
 ```hcl
 module "vpc" {
-  source = "github.com/junegu/terraform-aws-hub-spoke//modules/vpc"
+  source = "github.com/JIUNG9/terraform-aws-hub-spoke//modules/vpc"
 
   organization = "myorg"
   project      = "platform"
@@ -92,7 +92,7 @@ The module supports two types of VPC endpoints:
 
 ```hcl
 module "vpc" {
-  source = "github.com/junegu/terraform-aws-hub-spoke//modules/vpc"
+  source = "github.com/JIUNG9/terraform-aws-hub-spoke//modules/vpc"
 
   # ... other variables ...
 
