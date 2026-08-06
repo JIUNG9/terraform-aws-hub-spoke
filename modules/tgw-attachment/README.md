@@ -6,7 +6,7 @@ Attaches a spoke VPC to a Transit Gateway, associates it with the correct enviro
 
 ```hcl
 module "prod_attachment" {
-  source = "github.com/junegu/terraform-aws-hub-spoke//modules/tgw-attachment"
+  source = "github.com/JIUNG9/terraform-aws-hub-spoke//modules/tgw-attachment"
 
   organization = "myorg"
   project      = "commerce"
