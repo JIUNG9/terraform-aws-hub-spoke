@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- `terraform test` suite for the `vpc` module's input validations (`modules/vpc/tests/`), run on a mocked AWS provider; `make test` now runs it
+- `enable_nat_gateway` validation: a NAT gateway needs at least one public subnet, instead of failing with `Invalid index` at plan time
+
+### Fixed
+- `make test` pointed at a `tests/` Go directory that was never committed
+
 ## [0.4.0] - 2026-04-08
 
 ### Added

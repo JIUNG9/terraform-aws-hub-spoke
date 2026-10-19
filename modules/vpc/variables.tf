@@ -121,6 +121,13 @@ variable "enable_nat_gateway" {
   description = "Whether to create a NAT Gateway for private subnet internet access"
   type        = bool
   default     = true
+
+  validation {
+    # The NAT gateway lives in the first public subnet. Without one the plan
+    # fails deep in the graph with "Invalid index" on aws_subnet.public[0].
+    condition     = !var.enable_nat_gateway || length(var.public_subnets) > 0
+    error_message = "enable_nat_gateway = true needs at least one public subnet to place the NAT gateway in. Provide public_subnets or set enable_nat_gateway = false."
+  }
 }
 
 # ------------------------------------------------------------------------------
