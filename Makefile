@@ -13,6 +13,6 @@ lint:
 	tflint --recursive
 
 test:
-	cd tests && go test -v ./...
+	cd modules/vpc && terraform init -backend=false > /dev/null && terraform test
 
 all: fmt validate lint
