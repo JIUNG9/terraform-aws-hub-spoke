@@ -3,15 +3,15 @@
 [![CI](https://github.com/JIUNG9/terraform-aws-hub-spoke/actions/workflows/ci.yml/badge.svg)](https://github.com/JIUNG9/terraform-aws-hub-spoke/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Production-ready Terraform modules for AWS multi-account hub-spoke network architecture using Transit Gateway.
+Terraform modules for an AWS multi-account hub-spoke network on Transit Gateway: one hub account, isolated prod/stage/dev spokes, routing that keeps environments apart.
 
-Built from real-world experience managing a 5-account AWS environment at a Korean F&B tech company, serving production microservices across isolated environments.
+This is a reference implementation of a pattern I ran in production on a 5-account AWS estate. It's small on purpose (three modules, two examples, a `terraform test` suite) so you can read the whole thing and adapt it, rather than a general-purpose module to depend on. If you want a maintained building block, `terraform-aws-modules/vpc` and `terraform-aws-modules/transit-gateway` are the usual choice; this repo shows how the pieces fit for hub-spoke isolation.
 
 ## Architecture
 
 ```
                          +-------------------------------+
-                         |       Hub Account (nexus)     |
+                         |       Hub Account             |
                          |                               |
                          |   +---------------------+     |
                          |   |   Transit Gateway    |     |
@@ -46,7 +46,7 @@ Built from real-world experience managing a 5-account AWS environment at a Korea
     prod  <--X--> dev       (no direct routing)
     prod  <--X--> stage     (no direct routing)
     stage <--X--> dev       (no direct routing)
-    all   <----> hub/nexus  (routed via Transit Gateway)
+    all   <----> hub        (routed via Transit Gateway)
 ```
 
 ## Features
@@ -247,7 +247,7 @@ MIT License. See [LICENSE](./LICENSE) for details.
 - LinkedIn: [linkedin.com/in/junegu](https://linkedin.com/in/junegu)
 - Medium: [medium.com/@June-Gu](https://medium.com/@June-Gu)
 
-Site Reliability Engineer with 5+ years of experience building cloud infrastructure at scale. Previously at a large e-commerce company and currently at a large tech company. This project is based on production patterns used to manage multi-account AWS environments serving microservices in Korea's F&B tech sector.
+Site Reliability Engineer, 5+ years building cloud infrastructure at scale. The modules come from patterns I used to run a multi-account AWS estate serving production microservices.
 
 ## Related Articles
 
