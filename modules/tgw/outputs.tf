@@ -26,6 +26,11 @@ output "route_table_ids" {
   value       = { for k, v in aws_ec2_transit_gateway_route_table.this : k => v.id }
 }
 
+output "hub_route_table_id" {
+  description = "ID of the hub TGW route table. Associate the hub attachment with it and propagate every spoke attachment into it"
+  value       = aws_ec2_transit_gateway_route_table.hub.id
+}
+
 # ------------------------------------------------------------------------------
 # RAM Share Outputs
 # ------------------------------------------------------------------------------

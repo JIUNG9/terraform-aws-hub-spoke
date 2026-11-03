@@ -21,6 +21,16 @@ output "route_table_association_id" {
   value       = aws_ec2_transit_gateway_route_table_association.this.id
 }
 
+output "associated_route_table_id" {
+  description = "ID of the TGW route table this attachment is associated with (the routes it can use)"
+  value       = aws_ec2_transit_gateway_route_table_association.this.transit_gateway_route_table_id
+}
+
+output "propagated_route_table_ids" {
+  description = "IDs of the TGW route tables this attachment propagates its CIDR into (who can reach it)"
+  value       = aws_ec2_transit_gateway_route_table_propagation.this[*].transit_gateway_route_table_id
+}
+
 # ------------------------------------------------------------------------------
 # Naming
 # ------------------------------------------------------------------------------
