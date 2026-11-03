@@ -42,9 +42,14 @@ Hub VPC (10.0.0.0/16)
   |
   +-- Transit Gateway (ASN 64512)
         |
-        +-- [prod RT] --> Prod VPC (10.1.0.0/16)
+        +-- [hub RT]   holds: Prod VPC (10.1.0.0/16), Stage VPC (10.50.0.0/16)
+        |              used by: Hub attachment
         |
-        +-- [stage RT] --> Stage VPC (10.50.0.0/16)
+        +-- [prod RT]  holds: Hub VPC (10.0.0.0/16)
+        |              used by: Prod attachment
+        |
+        +-- [stage RT] holds: Hub VPC (10.0.0.0/16)
+                       used by: Stage attachment
 
 Routing:
   Hub   <--> Prod   (allowed)

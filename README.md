@@ -116,8 +116,10 @@ module "hub_attachment" {
   vpc_id             = module.hub_vpc.vpc_id
   subnet_ids         = module.hub_vpc.private_subnet_ids
 
-  route_table_id = module.tgw.route_table_ids["prod"]
+  # The hub has its own TGW route table; every spoke propagates into it.
+  route_table_id = module.tgw.hub_route_table_id
 
+  # Hub routes go into every environment table so each spoke can reach the hub.
   propagate_to_route_table_ids = values(module.tgw.route_table_ids)
 
   tags = {
