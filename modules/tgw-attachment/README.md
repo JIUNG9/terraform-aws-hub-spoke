@@ -20,9 +20,10 @@ module "prod_attachment" {
   # Associate with prod route table
   route_table_id = module.tgw.route_table_ids["prod"]
 
-  # Propagate routes to prod RT and hub RT so both can reach this VPC
+  # Propagate into the hub table only, so the hub can reach this VPC and the
+  # other environments cannot
   propagate_to_route_table_ids = [
-    module.tgw.route_table_ids["prod"],
+    module.tgw.hub_route_table_id,
   ]
 
   # Add TGW route in VPC private/database route tables
@@ -63,11 +64,13 @@ module "prod_attachment" {
 | `transit_gateway_attachment_id` | ID of the TGW VPC attachment |
 | `transit_gateway_attachment_vpc_owner_id` | VPC owner account ID |
 | `route_table_association_id` | ID of the route table association |
+| `associated_route_table_id` | TGW route table the attachment is associated with |
+| `propagated_route_table_ids` | TGW route tables the attachment propagates into |
 | `name_prefix` | Computed name prefix |
 
 ## How It Works
 
 1. **Attachment**: Creates a TGW VPC attachment using the specified private subnets
-2. **Association**: Associates the attachment with the environment-specific TGW route table (e.g., prod RT)
-3. **Propagation**: Propagates the VPC's CIDR to specified TGW route tables so other VPCs can reach it
+2. **Association**: Associates the attachment with one TGW route table. A spoke uses its environment table (e.g., prod RT); the hub uses `module.tgw.hub_route_table_id`. The association decides which routes the attachment can use
+3. **Propagation**: Propagates the VPC's CIDR into the listed TGW route tables. A spoke propagates into the hub table; the hub propagates into every environment table
 4. **VPC Routes**: Adds routes in VPC route tables pointing `10.0.0.0/8` (or custom CIDR) to the TGW

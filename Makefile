@@ -14,5 +14,6 @@ lint:
 
 test:
 	cd modules/vpc && terraform init -backend=false > /dev/null && terraform test
+	cd examples/complete && terraform init -backend=false > /dev/null && terraform test
 
 all: fmt validate lint

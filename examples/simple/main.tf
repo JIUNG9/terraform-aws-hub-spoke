@@ -83,7 +83,7 @@ module "hub_attachment" {
   vpc_id             = module.hub_vpc.vpc_id
   subnet_ids         = module.hub_vpc.private_subnet_ids
 
-  route_table_id               = module.tgw.route_table_ids["prod"]
+  route_table_id               = module.tgw.hub_route_table_id
   propagate_to_route_table_ids = values(module.tgw.route_table_ids)
 
   vpc_route_table_ids  = compact([module.hub_vpc.private_route_table_id])
@@ -133,7 +133,7 @@ module "spoke_attachment" {
   subnet_ids         = module.spoke_vpc.private_subnet_ids
 
   route_table_id               = module.tgw.route_table_ids["prod"]
-  propagate_to_route_table_ids = [module.tgw.route_table_ids["prod"]]
+  propagate_to_route_table_ids = [module.tgw.hub_route_table_id]
 
   vpc_route_table_ids  = compact([module.spoke_vpc.private_route_table_id])
   tgw_destination_cidr = "10.0.0.0/8"

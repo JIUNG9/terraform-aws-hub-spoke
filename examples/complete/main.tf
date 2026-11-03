@@ -121,10 +121,12 @@ module "hub_attachment" {
   vpc_id             = module.hub_vpc.vpc_id
   subnet_ids         = module.hub_vpc.private_subnet_ids
 
-  # Hub is associated with prod RT (it needs to be reachable from all)
-  route_table_id = module.tgw.route_table_ids["prod"]
+  # The hub has its own route table, which every spoke propagates into, so the
+  # hub can reach every spoke.
+  route_table_id = module.tgw.hub_route_table_id
 
-  # Propagate hub routes to ALL environment route tables
+  # Propagate hub routes into every environment route table, so each spoke can
+  # reach the hub and nothing else.
   propagate_to_route_table_ids = values(module.tgw.route_table_ids)
 
   # Add return routes in hub VPC
@@ -182,8 +184,9 @@ module "prod_attachment" {
 
   route_table_id = module.tgw.route_table_ids["prod"]
 
+  # Propagate into the hub table only: prod must not appear in the stage table.
   propagate_to_route_table_ids = [
-    module.tgw.route_table_ids["prod"],
+    module.tgw.hub_route_table_id,
   ]
 
   vpc_route_table_ids  = compact([module.prod_vpc.private_route_table_id, module.prod_vpc.database_route_table_id])
@@ -239,8 +242,9 @@ module "stage_attachment" {
 
   route_table_id = module.tgw.route_table_ids["stage"]
 
+  # Propagate into the hub table only: stage must not appear in the prod table.
   propagate_to_route_table_ids = [
-    module.tgw.route_table_ids["stage"],
+    module.tgw.hub_route_table_id,
   ]
 
   vpc_route_table_ids  = compact([module.stage_vpc.private_route_table_id, module.stage_vpc.database_route_table_id])

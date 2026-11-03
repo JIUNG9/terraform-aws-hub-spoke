@@ -54,7 +54,7 @@ resource "aws_ec2_transit_gateway" "this" {
 }
 
 # ------------------------------------------------------------------------------
-# Route Tables (one per environment for isolation)
+# Environment Route Tables (one per environment for isolation)
 # ------------------------------------------------------------------------------
 
 resource "aws_ec2_transit_gateway_route_table" "this" {
@@ -65,6 +65,22 @@ resource "aws_ec2_transit_gateway_route_table" "this" {
   tags = merge(local.common_tags, {
     Name        = "${local.name_prefix}-tgw-rt-${each.key}"
     Environment = each.key
+  })
+}
+
+# ------------------------------------------------------------------------------
+# Hub Route Table
+# The hub attachment is associated with this table, and every spoke attachment
+# propagates its CIDR into it. That is what lets the hub reply to any spoke.
+# It must not be one of the environment tables: an environment table holds only
+# its own spokes' routes, so a hub associated with it could not reach the others.
+# ------------------------------------------------------------------------------
+
+resource "aws_ec2_transit_gateway_route_table" "hub" {
+  transit_gateway_id = aws_ec2_transit_gateway.this.id
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-tgw-rt-hub"
   })
 }
 

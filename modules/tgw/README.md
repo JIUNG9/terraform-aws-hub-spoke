@@ -54,6 +54,7 @@ module "tgw" {
 | `transit_gateway_arn` | ARN of the Transit Gateway |
 | `transit_gateway_owner_id` | Owner account ID |
 | `route_table_ids` | Map of environment name to route table ID |
+| `hub_route_table_id` | ID of the hub route table |
 | `ram_resource_share_arn` | ARN of the RAM share (null if disabled) |
 | `name_prefix` | Computed name prefix |
 
@@ -61,8 +62,9 @@ module "tgw" {
 
 The module creates one TGW route table per environment. This enables network isolation:
 
-- **prod** route table: Only propagates routes from production VPCs and the hub
-- **stage** route table: Only propagates routes from staging VPCs and the hub
-- **dev** route table: Only propagates routes from dev VPCs and the hub
+- **prod** route table: holds the hub's route only (propagated from the hub attachment)
+- **stage** route table: holds the hub's route only
+- **dev** route table: holds the hub's route only
+- **hub** route table (`hub_route_table_id`): holds the route of every spoke, propagated from each spoke attachment
 
-Spoke VPCs in different environments cannot route to each other -- they can only reach the hub (shared services).
+A spoke attachment is associated with its environment table and propagates into the hub table. The hub attachment is associated with the hub table and propagates into every environment table. A spoke can therefore reach the hub and the hub can reach every spoke, but a prod spoke has no route to a stage spoke.
